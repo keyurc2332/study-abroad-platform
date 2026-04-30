@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String
+  createdAt    DateTime      @default(now())
+  profile      Profile?
+  applications Application[]
+  documents    Document[]
+}
+
+model Profile {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id])
+  gpa                Float
+  gradeSystem        String
+  targetDegree       String
+  targetFields       String[]
+  preferredCountries String[]
+  budgetUSD          Int
+  intakeYear         Int
+  intakeSeason       String
+  workExYears        Int      @default(0)
+  nationality        String
+}
+
+model University {
+  id             String        @id @default(cuid())
+  name           String
+  country        String
+  city           String
+  ranking        Int?
+  tuitionUSD     Int
+  acceptanceRate Float?
+  applications   Application[]
+}
+
+model Application {
+  id           String     @id @default(cuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  universityId String
+  university   University @relation(fields: [universityId], references: [id])
+  status       String     @default("shortlisted")
+  deadline     DateTime
+  createdAt    DateTime   @default(now())
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
