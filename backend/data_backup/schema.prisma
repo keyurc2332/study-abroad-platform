@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Existing models (unchanged) ─────────────────────────────────────────────
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String
+  createdAt    DateTime      @default(now())
+  profile      Profile?
+  applications Application[]
+  documents    Document[]
+}
+
+model Profile {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id])
+  gpa                Float
+  gradeSystem        String
+  targetDegree       String
+  targetFields       String[]
+  preferredCountries String[]
+  budgetUSD          Int
+  intakeYear         Int
+  intakeSeason       String
+  workExYears        Int      @default(0)
+  nationality        String
+}
+
+model Application {
+  id           String     @id @default(cuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  universityId String
+  university   University @relation(fields: [universityId], references: [id])
+  programId    String?
+  status       String     @default("shortlisted")
+  deadline     DateTime?
+  createdAt    DateTime   @default(now())
+  notes        String?
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Updated University model ─────────────────────────────────────────────────
+
+model University {
+  id             String  @id              // e.g. "mit_ug", "mit_ms", "mit_phd"
+  name           String
+  country        String
+  city           String
+  state          String?
+  level          String                   // "UG" | "MS" | "PhD"
+  ranking        Int?
+  tuitionUSD     Float
+  acceptanceRate Float?
+  website        String?
+
+  // UG-specific
+  satMin        Int?
+  actMin        Int?
+  highSchoolGPA Float?
+
+  // PhD-specific
+  funded                    Boolean?
+  stipendUSD                Int?
+  researchAreas             String[]
+  researchStatementRequired Boolean?
+  advisorMatchRequired      Boolean?
+
+  programs     Program[]
+  applications Application[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Updated Program model ────────────────────────────────────────────────────
+
+model Program {
+  id           String     @id @default(cuid())
+  universityId String
+  university   University @relation(fields: [universityId], references: [id])
+
+  level          String               // "UG" | "MS" | "PhD"
+  name           String
+  degree         String
+  field          String
+  durationMonths Int
+  tuitionUSD     Float
+
+  // English proficiency
+  ieltsMin Float?
+  toeflMin Int?
+
+  // UG-specific
+  satMin        Int?
+  actMin        Int?
+  highSchoolGPA Float?
+
+  // MS-specific
+  minGPA      Float?
+  greRequired Boolean @default(false)
+  minGRE      Int?
+
+  // PhD-specific
+  funded                    Boolean?
+  stipendUSD                Int?
+  researchAreas             String[]
+  researchStatementRequired Boolean?
+  advisorMatchRequired      Boolean?
+
+  // Common
+  lorCount       Int     @default(3)
+  sopRequired    Boolean @default(true)
+  resumeRequired Boolean @default(true)
+  deadlineFall   String?
+  deadlineSpring String?
+  applicationFee Int?
+  scholarships   Boolean @default(false)
+  notes          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

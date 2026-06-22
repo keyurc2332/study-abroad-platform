@@ -3,12 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
+// ─── User & Auth ──────────────────────────────────────────────────────────────
+
 model User {
-  id           String        @id @default(cuid())
+  id           String        @id @default(cuid()) @map("_id")
   email        String        @unique
   name         String
   createdAt    DateTime      @default(now())
@@ -18,45 +20,52 @@ model User {
 }
 
 model Profile {
-  id                 String   @id @default(cuid())
+  id                 String   @id @default(cuid()) @map("_id")
   userId             String   @unique
   user               User     @relation(fields: [userId], references: [id])
+
   gpa                Float
   gradeSystem        String
   targetDegree       String
   targetFields       String[]
   preferredCountries String[]
+
   budgetUSD          Int
   intakeYear         Int
   intakeSeason       String
+
+  ieltsScore         Float?
+  toeflScore         Int?
+  pteScore           Int?
+  duolingoScore      Int?
+  greScore           Int?
+  satScore           Int?
+  actScore           Int?
+
   workExYears        Int      @default(0)
   nationality        String
-}
+  specialCategory    String   @default("General")
+  undergraduateField String?
 
-model University {
-  id             String        @id @default(cuid())
-  name           String
-  country        String
-  city           String
-  ranking        Int?
-  tuitionUSD     Int
-  acceptanceRate Float?
-  applications   Application[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 model Application {
-  id           String     @id @default(cuid())
+  id           String     @id @default(cuid()) @map("_id")
   userId       String
   user         User       @relation(fields: [userId], references: [id])
   universityId String
   university   University @relation(fields: [universityId], references: [id])
+  programId    String?
   status       String     @default("shortlisted")
-  deadline     DateTime
+  deadline     DateTime?
   createdAt    DateTime   @default(now())
+  notes        String?
 }
 
 model Document {
-  id        String   @id @default(cuid())
+  id        String   @id @default(cuid()) @map("_id")
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   type      String
@@ -64,4 +73,387 @@ model Document {
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// ─── University ───────────────────────────────────────────────────────────────
+
+model University {
+  id             String  @id @map("_id")
+  name           String
+  country        String
+  city           String
+  state          String?
+  level          String
+  ranking        Int?
+  acceptanceRate Float?
+  website        String?
+  campusType     String?
+
+  estimatedLivingCostUSD Int?
+  healthInsuranceCostUSD Int?
+
+  postStudyWorkMonths Int?
+  workHoursAllowed    Int?
+
+  nhsIhsSurchargeUSD     Int?
+  blockedAccountRequired  Boolean?
+  blockedAccountAmountUSD Int?
+  apsRequired             Boolean?
+  uniAssistRequired       Boolean?
+  studyPermitRequired     Boolean?
+  f1VisaRequired          Boolean?
+  oshcRequired            Boolean?
+
+  cheveningEligible    Boolean?
+  daadEligible         Boolean?
+  rtpEligible          Boolean?
+  commonwealthEligible Boolean?
+  fulbrightEligible    Boolean?
+
+  competitivenessScore  Int?
+  typicalGPAMin         Float?
+  typicalGPAMax         Float?
+  typicalGREMin         Int?
+  tier                  String?
+  researchIntensity     String?
+  prPathwayScore        Int?
+  jobMarketScore        Int?
+  avgSalaryUSD          Int?
+  pgwpEligible          Boolean?
+  assistantshipAvailable Boolean?
+  rollingAdmissions     Boolean?
+  publicUniversity      Boolean?
+
+  dataSource   String?
+  lastVerified String?
+
+  programs     Program[]
+  applications Application[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Program ──────────────────────────────────────────────────────────────────
+
+model Program {
+  id           String     @id @default(cuid()) @map("_id")
+  universityId String
+  university   University @relation(fields: [universityId], references: [id])
+
+  level          String
+  name           String
+  degree         String
+  field          String
+  durationMonths Int
+  language       String?
+  campusType     String?
+
+  tuitionUSD               Int?
+  applicationFee           Int?
+  estimatedLivingCostUSD   Int?
+  healthInsuranceCostUSD   Int?
+  nhsIhsSurchargeUSD       Int?
+  semesterContributionUSD  Int?
+  totalFirstYearCostUSD    Int?
+  netCostAfterFundingUSD   Int?
+
+  ieltsMin    Float?
+  toeflMin    Int?
+  pteMin      Int?
+  duolingoMin Int?
+
+  minGPA            Float?
+  highSchoolGPA     Float?
+  satMin            Int?
+  actMin            Int?
+  greRequired       Boolean  @default(false)
+  minGRE            Int?
+  gmatRequired      Boolean  @default(false)
+  gmatMinScore      Int?
+  workExperienceYears Int    @default(0)
+
+  funded     Boolean?
+  stipendUSD Int?
+
+  sopRequired               Boolean  @default(true)
+  motivationLetterRequired  Boolean  @default(false)
+  resumeRequired            Boolean  @default(true)
+  lorCount                  Int      @default(2)
+  transcriptRequired        Boolean  @default(true)
+  financialDocRequired      Boolean  @default(true)
+  researchStatementRequired Boolean  @default(false)
+  researchProposalRequired  Boolean  @default(false)
+  advisorMatchRequired      Boolean  @default(false)
+  portfolioRequired         Boolean  @default(false)
+  writingSampleRequired     Boolean  @default(false)
+  personalStatementRequired Boolean  @default(false)
+  admissionTestRequired     String?
+
+  applicationPortal String?
+  ucasRequired      Boolean   @default(false)
+  deadlineFall      String?
+  deadlineWinter    String?
+  intakeMonths      String[]
+
+  apostilleRequired       Boolean  @default(false)
+  apsRequired             Boolean  @default(false)
+  uniAssistRequired       Boolean  @default(false)
+  blockedAccountRequired  Boolean  @default(false)
+  blockedAccountAmountUSD Int?
+  germanLanguageRequired  Boolean  @default(false)
+  oshcRequired            Boolean?
+  oshcCostUSD             Int?
+
+  postStudyWorkMonths Int?
+  workHoursAllowed    Int?
+  stemDesignated      Boolean?
+  optEligibleMonths   Int?
+
+  scholarships         Boolean  @default(false)
+  cheveningEligible    Boolean  @default(false)
+  daadEligible         Boolean  @default(false)
+  rtpEligible          Boolean?
+  commonwealthEligible Boolean  @default(false)
+  fulbrightEligible    Boolean  @default(false)
+
+  coopAvailable      Boolean  @default(false)
+  internshipIncluded Boolean  @default(false)
+  thesisRequired     Boolean  @default(false)
+  researchAreas      String[]
+
+  officialURL  String?
+
+  dataSource   String?
+  lastVerified String?
+  notes        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Loan Application ─────────────────────────────────────────────────────────
+
+model LoanApplication {
+  id                     String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  email                  String
+  fullName               String
+  phone                  String
+  nationality            String
+  educationLevel         String
+  employmentStatus       String
+  workExperience         Int
+  
+  dateOfBirth            String?
+  passportNumber         String?
+  
+  amountNeeded           Float
+  currency               String   @default("USD")
+  purpose                String
+  repaymentPeriod        Int
+  loanType               String
+  
+  employerName           String?
+  jobTitle               String?
+  annualIncome           Float?
+  monthlyIncome          Float?
+  
+  fieldOfStudy           String?
+  universityName         String?
+  countryOfStudy         String?
+  
+  existingLoans          Float?
+  creditScore            Int?
+  bankAccountNumber      String?
+  bankName               String?
+  
+  hasCoApplicant         Boolean  @default(false)
+  coApplicantName        String?
+  coApplicantRelation    String?
+  coApplicantPhone       String?
+  coApplicantIncome      Float?
+  
+  collateralType         String?
+  collateralValue        Float?
+  guarantorName          String?
+  guarantorPhone         String?
+  
+  additionalInfo         String?
+  emailSent              Boolean  @default(false)
+  emailError             String?
+  
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@index([email])
+}
+
+// ─── Visa Interview Chatbot ───────────────────────────────────────────────────
+model VisaInterview {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  email               String
+  interviewType       String
+  sessionId           String   @unique
+  
+  messages            VisaMessage[]
+  
+  totalQuestions      Int      @default(0)
+  correctAnswers      Int      @default(0)
+  partialAnswers      Int      @default(0)
+  incorrectAnswers    Int      @default(0)
+  overallScore        Float?
+  status              String   @default("in_progress")
+  
+  strengths           String?
+  weaknesses          String?
+  recommendations     String?
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  completedAt         DateTime?
+
+  @@index([email])
+}
+
+model VisaMessage {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  interviewId         String
+  interview           VisaInterview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  
+  role                String
+  content             String
+  
+  questionNumber      Int?
+  difficulty          String?
+  category            String?
+  
+  evaluation          String?
+  feedback            String?
+  score               Float?
+  suggestions         String?
+  
+  createdAt           DateTime @default(now())
+
+  @@index([interviewId])
+}
+
+// ─── Resume Builder ────────────────────────────────────────────────────────────
+
+model ResumeBuilder {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  email             String   @unique
+  fullName          String
+  phoneNumber       String?
+  linkedinUrl       String?
+  githubUrl         String?
+  professionalSummary String?
+  
+  educations        Education[]
+  experiences       Experience[]
+  skills            Skill[]
+  languages         Language[]
+  achievements      Achievement[]
+  extracurriculars  Extracurricular[]
+  
+  // AI Generated Content
+  optimizedSummary  String?     // AI-improved summary
+  resumeText        String?     // Final plain text resume
+  resumeJson        String?     // Structured JSON version
+  aiSuggestions     String?     // Gemini suggestions for improvement
+  
+  // Metadata
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  lastGeneratedAt   DateTime?
+}
+
+model Education {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  resumeId          String
+  resume            ResumeBuilder @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  
+  institution       String
+  degree            String
+  fieldOfStudy      String?
+  dates             String    // e.g., "2018-2022" or "Jan 2018 - May 2022"
+  description       String?   // GPA, honors, relevant coursework
+  
+  createdAt         DateTime @default(now())
+  
+  @@index([resumeId])
+}
+
+model Experience {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  resumeId          String
+  resume            ResumeBuilder @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  
+  jobTitle          String
+  company           String
+  location          String?
+  dates             String    // e.g., "2020-2022"
+  description       String    // Achievements and responsibilities
+  aiOptimized       String?   // Gemini-improved description with action verbs
+  
+  createdAt         DateTime @default(now())
+  
+  @@index([resumeId])
+}
+
+model Skill {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  resumeId          String
+  resume            ResumeBuilder @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  
+  name              String
+  category          String?   // e.g., "Programming", "Tools", "Soft Skills"
+  proficiencyLevel  String?   // Beginner, Intermediate, Expert
+  
+  createdAt         DateTime @default(now())
+  
+  @@index([resumeId])
+}
+
+model Language {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  resumeId          String
+  resume            ResumeBuilder @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  
+  name              String
+  proficiencyLevel  String?   // Native, Fluent, Intermediate, Basic
+  
+  createdAt         DateTime @default(now())
+  
+  @@index([resumeId])
+}
+
+model Achievement {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  resumeId          String
+  resume            ResumeBuilder @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  
+  title             String
+  description       String?
+  
+  createdAt         DateTime @default(now())
+  
+  @@index([resumeId])
+}
+
+model Extracurricular {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  resumeId          String
+  resume            ResumeBuilder @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  
+  title             String
+  role              String?
+  dates             String?
+  description       String?
+  
+  createdAt         DateTime @default(now())
+  
+  @@index([resumeId])
 }
