@@ -19,7 +19,7 @@ function AdmitBar({ label, range, category }: { label: string; range: string; ca
   const width: Record<string,string> = { High:"75%", Moderate:"55%", Fair:"35%", Low:"18%", "Very Low":"6%" };
   return (
     <div className="mt-3">
-      <div className="flex justify-between text-xs text-slate-500 mb-1.5">
+      <div className="flex flex-col gap-1 text-xs text-slate-500 mb-1.5 sm:flex-row sm:justify-between">
         <span>Admit probability</span>
         <span className="font-medium text-slate-700">{label} · {range}</span>
       </div>
@@ -74,7 +74,7 @@ function UniCard({ uni, index }: { uni: RecommendedUniversity; index: number }) 
             <p className="text-sm text-slate-500 mt-0.5">{uni.name}</p>
           </div>
           {uni.ranking && (
-            <div className="flex items-center gap-1 rounded-xl bg-amber-50 px-2.5 py-1.5 text-xs text-amber-700 shrink-0">
+            <div className="flex shrink-0 items-center gap-1 rounded-xl bg-amber-50 px-2 py-1.5 text-xs text-amber-700 sm:px-2.5">
               <Star className="h-3 w-3" /> #{uni.ranking}
             </div>
           )}
@@ -158,15 +158,15 @@ function UniCard({ uni, index }: { uni: RecommendedUniversity; index: number }) 
         </AnimatePresence>
 
         {/* Footer */}
-        <div className="mt-4 flex items-center justify-between gap-2 border-t border-slate-100 pt-3">
-          <div className="flex gap-2">
+        <div className="mt-4 flex flex-col gap-3 border-t border-slate-100 pt-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap gap-2">
             {uni.stemDesignated && <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs text-blue-700">STEM OPT</span>}
             {uni.funded && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-700">Funded</span>}
             {uni.deadlineFall && <span className="text-xs text-slate-400">Due: {uni.deadlineFall}</span>}
           </div>
           {uni.officialURL && (
             <a href={uni.officialURL} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-1.5 text-xs text-white hover:bg-blue-700 transition-colors">
+              className="flex items-center justify-center gap-1 rounded-lg bg-blue-600 px-3 py-1.5 text-xs text-white transition-colors hover:bg-blue-700">
               Apply <ExternalLink className="h-3 w-3" />
             </a>
           )}
@@ -185,7 +185,7 @@ function IncompleteGate({ profile }: { profile: any }) {
   if (!profile.preferredCountries?.length) missing.push("Preferred Countries");
 
   return (
-    <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
+      <div className="flex flex-col items-center justify-center px-4 py-20 text-center sm:py-24">
       <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-blue-50">
         <User className="h-10 w-10 text-blue-500" />
       </div>
@@ -201,7 +201,7 @@ function IncompleteGate({ profile }: { profile: any }) {
         ))}
       </div>
       <Link to="/profile"
-        className="flex items-center gap-2 rounded-2xl bg-blue-600 px-8 py-3 text-white hover:bg-blue-700 shadow-lg shadow-blue-200 transition-colors">
+        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-8 py-3 text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-700 sm:w-auto">
         Complete Profile <ArrowRight className="h-4 w-4" />
       </Link>
     </div>
@@ -254,9 +254,9 @@ export default function Recommendations() {
           <>
             {/* Goals + controls */}
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-              className="mb-6 rounded-3xl bg-white border border-slate-200/70 p-5 shadow-sm">
+              className="mb-6 rounded-3xl bg-white border border-slate-200/70 p-4 shadow-sm sm:p-5">
               <p className="text-sm font-medium text-slate-700 mb-3">Refine by goal</p>
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="grid gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center">
                 {[
                   { key: "wantResearch",   label: "Research Focus", icon: BookOpen },
                   { key: "wantPR",         label: "PR Pathway",     icon: Globe },
@@ -265,7 +265,7 @@ export default function Recommendations() {
                 ].map(({ key, label, icon: Icon }) => (
                   <button key={key}
                     onClick={() => setGoals(g => ({ ...g, [key]: !g[key as keyof typeof g] }))}
-                    className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm transition-all ${
+                    className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-2 text-sm transition-all ${
                       goals[key as keyof typeof goals]
                         ? "bg-blue-600 text-white border-blue-600 shadow-sm"
                         : "bg-white text-slate-600 border-slate-200 hover:border-blue-300"
@@ -274,7 +274,7 @@ export default function Recommendations() {
                   </button>
                 ))}
                 <button onClick={fetch} disabled={loading}
-                  className="ml-auto flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-60 shadow-sm transition-colors">
+                  className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60 lg:ml-auto">
                   {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Search className="h-3.5 w-3.5" />}
                   {loading ? "Loading..." : "Update"}
                 </button>
@@ -329,7 +329,7 @@ export default function Recommendations() {
                 </div>
 
                 {/* Tab toggle */}
-                <div className="mb-6 flex gap-2">
+                <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
                   {(["buckets", "all"] as const).map(t => (
                     <button key={t} onClick={() => setTab(t)}
                       className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
@@ -339,7 +339,7 @@ export default function Recommendations() {
                     </button>
                   ))}
                   {data.geminiUsed && (
-                    <span className="ml-auto flex items-center gap-1.5 text-xs text-purple-600">
+                    <span className="flex items-center gap-1.5 text-xs text-purple-600 sm:ml-auto">
                       <Sparkles className="h-3.5 w-3.5" /> AI Enhanced
                     </span>
                   )}
@@ -353,7 +353,7 @@ export default function Recommendations() {
                       { title: "Reach Schools", subtitle: "Ambitious — apply if you want to aim high", unis: data.reach, color: "text-rose-700", dot: "bg-rose-500" },
                     ].filter(s => s.unis.length > 0).map(({ title, subtitle, unis, color, dot }) => (
                       <div key={title}>
-                        <div className="flex items-center gap-3 mb-4">
+                        <div className="mb-4 flex items-start gap-3">
                           <div className={`h-3 w-3 rounded-full ${dot}`} />
                           <div>
                             <h2 className={`text-lg font-semibold ${color}`}>{title}</h2>

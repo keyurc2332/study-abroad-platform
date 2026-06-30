@@ -287,7 +287,7 @@ export default function UniversityShortlist() {
         {/* Search + Filters */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           className="mb-6 rounded-3xl bg-white border border-slate-200/70 p-4 shadow-sm sm:p-5">
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input type="text" value={search} onChange={e => setSearch(e.target.value)}
@@ -296,7 +296,7 @@ export default function UniversityShortlist() {
               />
             </div>
             <button onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm transition-colors ${
+              className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm transition-colors ${
                 showFilters || hasFilters ? "border-blue-500 bg-blue-50 text-blue-700" : "border-slate-200 bg-white text-slate-600"
               }`}>
               <SlidersHorizontal className="h-4 w-4" />
@@ -308,14 +308,14 @@ export default function UniversityShortlist() {
             {showFilters && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                <div className="mt-4 flex flex-wrap gap-3">
+                <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
                   <select value={selectedCountry} onChange={e => setSelectedCountry(e.target.value)}
-                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:border-blue-500 focus:outline-none">
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:border-blue-500 focus:outline-none">
                     <option value="All">All Countries</option>
                     {countries.map(c => <option key={c} value={c}>{FLAGS[c] ?? "🌍"} {c}</option>)}
                   </select>
                   <select value={selectedTier} onChange={e => setSelectedTier(e.target.value)}
-                    className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:border-blue-500 focus:outline-none">
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:border-blue-500 focus:outline-none">
                     <option value="All">All Tiers</option>
                     {["ELITE", "TOP", "STRONG", "GOOD", "ACCESSIBLE"].map(t => (
                       <option key={t} value={t}>{t}</option>
@@ -323,7 +323,7 @@ export default function UniversityShortlist() {
                   </select>
                   {hasFilters && (
                     <button onClick={clearFilters}
-                      className="flex items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600 hover:bg-red-100 transition-colors">
+                      className="flex items-center justify-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-100">
                       <X className="h-3.5 w-3.5" /> Clear
                     </button>
                   )}
@@ -334,7 +334,7 @@ export default function UniversityShortlist() {
         </motion.div>
 
         {/* Stats */}
-        <div className="mb-6 grid grid-cols-3 gap-4">
+        <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
           {[
             { label: "Total Found", value: total > 0 ? total.toLocaleString() : "—", icon: Building2, color: "text-blue-500 bg-blue-50" },
             { label: "Shortlisted", value: shortlistCount, icon: Heart, color: "text-red-500 bg-red-50" },
@@ -354,7 +354,7 @@ export default function UniversityShortlist() {
         {shortlistCount > 0 && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             className="mb-6 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 p-4 text-white shadow-lg">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
                 <Heart className="h-5 w-5" fill="white" />
                 <div>
@@ -363,7 +363,7 @@ export default function UniversityShortlist() {
                 </div>
               </div>
               <button onClick={() => setShortlisted([])}
-                className="rounded-xl bg-white/20 px-3 py-1.5 text-xs hover:bg-white/30 transition-colors">
+                className="self-start rounded-xl bg-white/20 px-3 py-1.5 text-xs transition-colors hover:bg-white/30 sm:self-center">
                 Clear all
               </button>
             </div>
@@ -399,7 +399,7 @@ export default function UniversityShortlist() {
 
         {/* Empty state */}
         {!loading && uniCount === 0 && (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="flex flex-col items-center justify-center px-4 py-20 text-center sm:py-24">
             <Building2 className="h-16 w-16 text-slate-200 mb-4" />
             <p className="text-slate-500">No universities found. Try adjusting your filters.</p>
             {hasFilters && (

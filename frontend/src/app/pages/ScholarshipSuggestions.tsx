@@ -127,7 +127,7 @@ export default function ScholarshipSuggestions() {
         </motion.div>
 
         {/* Stats */}
-        <div className="mb-6 grid grid-cols-3 gap-4">
+        <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
           {[
             { label: "External Scholarships", value: data?.external.length ?? "—", icon: Award, color: "text-purple-600 bg-purple-50" },
             { label: "Universities with Aid", value: data?.universities.length ?? "—", icon: Globe, color: "text-blue-500 bg-blue-50" },
@@ -146,8 +146,8 @@ export default function ScholarshipSuggestions() {
         {/* Search + Filter */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           className="mb-6 rounded-3xl bg-white border border-slate-200/70 p-4 shadow-sm sm:p-5">
-          <div className="flex flex-wrap gap-3">
-            <div className="relative flex-1 min-w-48">
+          <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto]">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input type="text" value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Search scholarships..."
@@ -155,12 +155,12 @@ export default function ScholarshipSuggestions() {
               />
             </div>
             <select value={filterCountry} onChange={e => setFilterCountry(e.target.value)}
-              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 focus:border-blue-500 focus:outline-none">
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 focus:border-blue-500 focus:outline-none">
               <option value="All">All Countries</option>
               {countries.map(c => <option key={c} value={c}>{FLAGS[c] ?? "🌍"} {c}</option>)}
             </select>
             <button onClick={fetchScholarships} disabled={loading}
-              className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm text-white hover:bg-blue-700 disabled:opacity-60 transition-colors">
+              className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm text-white transition-colors hover:bg-blue-700 disabled:opacity-60">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
               Refresh
             </button>
@@ -183,7 +183,7 @@ export default function ScholarshipSuggestions() {
         {data && !loading && (
           <>
             {/* Tabs */}
-            <div className="mb-6 flex gap-2">
+            <div className="mb-6 flex flex-col gap-2 sm:flex-row">
               {[
                 { key: "external", label: `External Scholarships (${filteredExternal.length})` },
                 { key: "universities", label: `University Aid (${data.universities.length})` },
@@ -211,7 +211,7 @@ export default function ScholarshipSuggestions() {
                     }`} />
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-2 mb-3">
-                        <div className="flex-1">
+                        <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap gap-2 mb-2">
                             <span className="text-lg">{FLAGS[s.country] ?? "🌍"}</span>
                             <span className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${COMPETITIVE_COLOR[s.competitive] ?? "text-slate-600 bg-slate-50 border-slate-200"}`}>
@@ -288,7 +288,7 @@ export default function ScholarshipSuggestions() {
                   </motion.article>
                 ))}
                 {filteredExternal.length === 0 && (
-                  <div className="col-span-3 text-center py-16 text-slate-400">No scholarships match your filters.</div>
+                  <div className="py-16 text-center text-slate-400 md:col-span-2 xl:col-span-3">No scholarships match your filters.</div>
                 )}
               </div>
             )}

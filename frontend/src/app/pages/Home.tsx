@@ -88,14 +88,14 @@ export default function Home() {
   const smoothEase = [0.22, 1, 0.36, 1] as const;
 
   return (
-    <main className="px-3 pb-4 sm:px-4 lg:px-5">
+    <main className="px-2 pb-3 sm:px-4 sm:pb-4 lg:px-5">
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, ease: smoothEase }}
-        className="mx-auto max-w-[1500px] overflow-hidden rounded-b-[28px] bg-white shadow-[0_28px_90px_rgba(37,99,235,0.12)]"
+        className="mx-auto max-w-[1500px] overflow-hidden rounded-b-[20px] bg-white shadow-[0_28px_90px_rgba(37,99,235,0.12)] sm:rounded-b-[28px]"
       >
-        <section className="relative min-h-[660px] overflow-hidden bg-[linear-gradient(112deg,#ffffff_0%,#fbfdff_45%,#edf5ff_100%)]">
+        <section className="relative min-h-[auto] overflow-hidden bg-[linear-gradient(112deg,#ffffff_0%,#fbfdff_45%,#edf5ff_100%)] lg:min-h-[660px]">
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 0.35, scale: 1 }}
@@ -125,18 +125,18 @@ export default function Home() {
             ))}
           </motion.div>
 
-          <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center px-6 pb-28 pt-20 sm:px-10 lg:grid-cols-[0.83fr_1.17fr] lg:px-16 lg:pb-32 lg:pt-24">
+          <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center px-4 pb-24 pt-12 sm:px-10 sm:pt-16 lg:grid-cols-[0.83fr_1.17fr] lg:px-16 lg:pb-32 lg:pt-24">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, ease: smoothEase }}
               className="relative z-20"
             >
-              <h1 className="max-w-[620px] text-[44px] leading-[1.12] text-slate-950 sm:text-[56px] lg:text-[58px]">
+              <h1 className="max-w-[620px] text-4xl leading-[1.12] text-slate-950 sm:text-[56px] lg:text-[58px]">
                 Explore the World,
                 <span className="block text-blue-600">Expand Your Education</span>
               </h1>
-              <p className="mt-5 max-w-[500px] text-lg leading-8 text-slate-600">
+              <p className="mt-5 max-w-[500px] text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
                 Find and apply to the best universities and programs around the globe.
               </p>
 
@@ -144,14 +144,14 @@ export default function Home() {
                 initial="hidden"
                 animate="visible"
                 variants={sectionReveal}
-                className="mt-9 flex max-w-[650px] flex-col gap-4 sm:flex-row"
+                className="mt-8 flex max-w-[650px] flex-col gap-3 sm:mt-9 lg:flex-row lg:gap-4"
               >
                 <motion.button
                   variants={fadeUp}
                   transition={{ duration: 0.45, ease: smoothEase }}
                   whileHover={{ y: -3, boxShadow: "0 14px 30px rgba(15, 23, 42, 0.08)" }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex h-14 flex-1 items-center justify-between rounded-xl border border-slate-200 bg-white px-5 text-sm text-slate-600 shadow-[0_8px_24px_rgba(15,23,42,0.04)]"
+                  className="flex h-[52px] flex-1 items-center justify-between rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-600 shadow-[0_8px_24px_rgba(15,23,42,0.04)] sm:h-14 sm:px-5"
                 >
                   <span className="flex items-center gap-3">
                     <Globe className="h-4 w-4 text-blue-600" />
@@ -164,7 +164,7 @@ export default function Home() {
                   transition={{ duration: 0.45, ease: smoothEase }}
                   whileHover={{ y: -3, boxShadow: "0 14px 30px rgba(15, 23, 42, 0.08)" }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex h-14 flex-1 items-center justify-between rounded-xl border border-slate-200 bg-white px-5 text-sm text-slate-600 shadow-[0_8px_24px_rgba(15,23,42,0.04)]"
+                  className="flex h-[52px] flex-1 items-center justify-between rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-600 shadow-[0_8px_24px_rgba(15,23,42,0.04)] sm:h-14 sm:px-5"
                 >
                   <span className="flex items-center gap-3">
                     <BookOpen className="h-4 w-4 text-blue-600" />
@@ -180,7 +180,7 @@ export default function Home() {
                 >
                   <Link
                     to="/dashboard"
-                    className="inline-flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-blue-600 px-8 text-sm text-white shadow-[0_14px_30px_rgba(37,99,235,0.28)] transition-colors hover:bg-blue-700"
+                    className="inline-flex h-[52px] w-full items-center justify-center gap-3 rounded-xl bg-blue-600 px-6 text-sm text-white shadow-[0_14px_30px_rgba(37,99,235,0.28)] transition-colors hover:bg-blue-700 sm:h-14 sm:px-8"
                   >
                     <Search className="h-4 w-4" />
                     Search
@@ -192,7 +192,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.48, ease: smoothEase }}
-                className="mt-10 flex flex-wrap items-center gap-5"
+                className="mt-9 flex flex-wrap items-center gap-4 sm:mt-10 sm:gap-5"
               >
                 <div className="flex -space-x-3">
                   {avatarUrls.map((url) => (
@@ -204,7 +204,7 @@ export default function Home() {
                     />
                   ))}
                 </div>
-                <div className="grid grid-cols-[auto_auto] items-center gap-x-4">
+                <div className="grid grid-cols-1 items-center gap-2 sm:grid-cols-[auto_auto] sm:gap-x-4">
                   <p className="max-w-40 text-sm leading-6 text-slate-600">
                     Trusted by <span className="text-slate-900">10K+ students</span> worldwide
                   </p>
@@ -215,13 +215,14 @@ export default function Home() {
                   </div>
                 </div>
               </motion.div>
+
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, x: 24, scale: 0.98 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               transition={{ duration: 0.7, delay: 0.1, ease: smoothEase }}
-              className="relative z-10 mt-10 h-[340px] lg:mt-0 lg:h-[560px]"
+              className="relative z-10 mt-8 h-[280px] sm:h-[340px] lg:mt-0 lg:h-[560px]"
             >
               <div className="absolute inset-0">
                 <div className="absolute bottom-5 left-5 h-24 w-[88%] rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(15,23,42,0.22),rgba(37,99,235,0.08)_45%,transparent_72%)] blur-2xl" />
@@ -271,7 +272,7 @@ export default function Home() {
                   </motion.div>
                 </div>
 
-                <div className="absolute bottom-[6%] right-[-5%] h-[36%] w-[44%] min-w-[250px]">
+                <div className="absolute bottom-[6%] right-[-5%] h-[36%] w-[44%] min-w-[190px] sm:min-w-[250px]">
                   <div className="absolute bottom-[-4%] left-[3%] h-[22%] w-[90%] rounded-[50%] bg-slate-900/18 blur-xl" />
                   <div className="absolute bottom-0 h-[34%] w-[94%] rotate-[-4deg] rounded-xl border border-blue-200 bg-gradient-to-r from-blue-700 via-blue-400 to-blue-100 shadow-[0_16px_28px_rgba(15,23,42,0.2)]">
                     <div className="absolute left-[10%] top-[17%] h-[66%] w-[78%] rounded-md bg-[repeating-linear-gradient(0deg,#ffffff_0px,#ffffff_4px,#e2e8f0_5px)]" />
@@ -301,7 +302,7 @@ export default function Home() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.35 }}
           variants={sectionReveal}
-          className="relative z-20 -mt-12 px-6 sm:px-10 lg:px-16"
+          className="relative z-20 -mt-10 px-4 sm:-mt-12 sm:px-10 lg:px-16"
         >
           <div className="mx-auto grid max-w-7xl gap-9 md:grid-cols-3">
             {features.map((feature) => {
@@ -312,12 +313,12 @@ export default function Home() {
                   variants={fadeUp}
                   transition={{ duration: 0.5, ease: smoothEase }}
                   whileHover={{ y: -8, scale: 1.015 }}
-                  className="group flex h-[150px] items-center gap-6 rounded-2xl border border-slate-200 bg-white px-7 shadow-[0_20px_45px_rgba(15,23,42,0.08)]"
+                  className="group flex min-h-[136px] items-center gap-4 rounded-2xl border border-slate-200 bg-white px-5 py-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] sm:h-[150px] sm:gap-6 sm:px-7"
                 >
                   <div
-                    className={`flex h-[78px] w-[78px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${feature.color} text-white shadow-lg`}
+                    className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${feature.color} text-white shadow-lg sm:h-[78px] sm:w-[78px]`}
                   >
-                    <Icon className="h-9 w-9" />
+                    <Icon className="h-7 w-7 sm:h-9 sm:w-9" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <h3 className="text-lg text-slate-950">{feature.title}</h3>
@@ -335,13 +336,13 @@ export default function Home() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
           variants={sectionReveal}
-          className="px-6 py-[70px] sm:px-10 lg:px-16"
+          className="px-4 py-14 sm:px-10 sm:py-[70px] lg:px-16"
         >
           <div className="mx-auto max-w-7xl">
             <motion.div variants={fadeUp} className="mb-12 flex items-center justify-center gap-6">
               <span className="hidden h-px w-32 bg-gradient-to-r from-transparent to-blue-400 sm:block" />
               <span className="hidden h-2 w-2 rounded-full bg-blue-600 sm:block" />
-              <h2 className="text-center text-3xl text-slate-950">
+              <h2 className="text-center text-2xl text-slate-950 sm:text-3xl">
                 Popular Study Abroad Destinations
               </h2>
               <span className="hidden h-2 w-2 rounded-full bg-blue-600 sm:block" />
@@ -366,7 +367,7 @@ export default function Home() {
                       className="h-full w-full object-cover"
                     />
                   </div>
-                  <div className="relative h-[128px] p-5 pt-6">
+                  <div className="relative min-h-[128px] p-5 pt-6">
                     <div className="absolute -top-7 left-5 flex h-14 w-16 items-center justify-center rounded-lg border-2 border-white bg-gradient-to-br from-blue-500 to-blue-700 text-xl text-white shadow-lg">
                       {destination.code}
                     </div>
@@ -408,7 +409,7 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.65, ease: smoothEase }}
-          className="px-6 pb-6 sm:px-10 lg:px-10"
+          className="px-4 pb-4 sm:px-10 sm:pb-6 lg:px-10"
         >
           <div className="relative mx-auto min-h-[335px] max-w-[1420px] overflow-hidden rounded-[28px] bg-blue-700 text-white">
             <img
@@ -422,12 +423,12 @@ export default function Home() {
                 <span key={index} className="h-1.5 w-1.5 rounded-full bg-white" />
               ))}
             </div>
-            <div className="relative px-8 py-14 sm:px-14 lg:px-28">
-              <h2 className="text-3xl sm:text-4xl">Start Your Journey Today!</h2>
-              <p className="mt-4 max-w-2xl text-lg text-blue-50">
+            <div className="relative px-5 py-10 sm:px-14 sm:py-14 lg:px-28">
+              <h2 className="text-2xl sm:text-4xl">Start Your Journey Today!</h2>
+              <p className="mt-4 max-w-2xl text-base text-blue-50 sm:text-lg">
                 Join thousands of students achieving their dreams abroad.
               </p>
-              <div className="mt-8 flex flex-wrap gap-10 text-sm text-blue-50">
+              <div className="mt-8 flex flex-col gap-4 text-sm text-blue-50 sm:flex-row sm:flex-wrap sm:gap-10">
                 <span className="flex items-center gap-3">
                   <User className="h-5 w-5" />
                   Personalized Guidance
@@ -448,7 +449,7 @@ export default function Home() {
               >
                 <Link
                   to="/profile"
-                  className="mt-9 inline-flex h-14 items-center gap-4 rounded-xl bg-white px-10 text-blue-700 shadow-lg transition-colors hover:bg-blue-50"
+                  className="mt-9 inline-flex h-14 w-full items-center justify-center gap-4 rounded-xl bg-white px-8 text-blue-700 shadow-lg transition-colors hover:bg-blue-50 sm:w-auto sm:px-10"
                 >
                   Get Started
                   <ChevronRight className="h-4 w-4" />

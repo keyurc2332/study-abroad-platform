@@ -51,27 +51,27 @@ export default function Profile() {
 
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }}
-          className="mb-8 flex items-end justify-between gap-4">
+          className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <p className="text-xs font-medium uppercase tracking-widest text-blue-600 mb-1">Your Profile</p>
             <h1 className="text-3xl text-slate-900">Study Preferences</h1>
             <p className="mt-1.5 text-sm text-slate-500">Tell us about yourself so we can find the best universities for you.</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex w-full flex-wrap gap-3 sm:w-auto sm:justify-end">
             {isEditing ? (
               <>
                 <button onClick={() => { setDraft(profile); setIsEditing(false); }}
-                  className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors">
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 sm:flex-none">
                   <X className="h-4 w-4" /> Cancel
                 </button>
                 <button onClick={handleSave}
-                  className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm text-white hover:bg-blue-700 shadow-lg shadow-blue-200 transition-colors">
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-700 sm:flex-none">
                   <Save className="h-4 w-4" /> Save
                 </button>
               </>
             ) : (
               <button onClick={() => { setDraft(profile); setIsEditing(true); }}
-                className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm text-white hover:bg-blue-700 shadow-lg shadow-blue-200 transition-colors">
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-700 sm:w-auto">
                 <Edit2 className="h-4 w-4" /> Edit Profile
               </button>
             )}
@@ -81,8 +81,8 @@ export default function Profile() {
         {/* Profile card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 to-blue-900 p-6 text-white shadow-xl">
-          <div className="flex items-center gap-5">
-            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 text-2xl font-semibold backdrop-blur">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/20 text-xl font-semibold backdrop-blur sm:h-20 sm:w-20 sm:text-2xl">
               {initials || <User className="h-8 w-8" />}
             </div>
             <div className="flex-1 min-w-0">
@@ -94,7 +94,7 @@ export default function Profile() {
                 {active.gpa && <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-xs">GPA: {active.gpa}</span>}
               </div>
             </div>
-            <div className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs ${complete ? "bg-green-500/20 text-green-300" : "bg-orange-500/20 text-orange-300"}`}>
+            <div className={`flex shrink-0 items-center gap-1.5 self-start rounded-full px-3 py-1.5 text-xs ${complete ? "bg-green-500/20 text-green-300" : "bg-orange-500/20 text-orange-300"}`}>
               <div className={`h-1.5 w-1.5 rounded-full ${complete ? "bg-green-400" : "bg-orange-400"}`} />
               {complete ? "Profile complete" : "Incomplete"}
             </div>
@@ -172,7 +172,7 @@ export default function Profile() {
           <Section title="Study Preferences" icon={<Sparkles className="h-4 w-4" />} delay={0.25}>
             <div className="space-y-5">
               <Field label="Preferred Countries">
-                <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
                   {COUNTRIES.map(c => {
                     const checked = active.preferredCountries.includes(c);
                     return (
@@ -194,7 +194,7 @@ export default function Profile() {
 
               <Field label="Annual Budget (USD)">
                 {isEditing ? (
-                  <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
+                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-5">
                     {BUDGETS.map(b => (
                       <button key={b} type="button" onClick={() => setDraft({ ...draft, budgetRange: b })}
                         className={`rounded-xl border px-3 py-2.5 text-xs text-center transition-all ${
@@ -228,7 +228,7 @@ export default function Profile() {
             <button
               onClick={() => { if (complete) navigate("/recommendations"); }}
               disabled={!complete}
-              className={`flex items-center gap-2 rounded-2xl px-6 py-3 text-sm font-medium whitespace-nowrap transition-all ${
+              className={`flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-medium transition-all sm:w-auto sm:whitespace-nowrap ${
                 complete
                   ? "bg-white text-blue-700 hover:bg-blue-50 shadow-lg cursor-pointer"
                   : "bg-white/20 text-white/60 cursor-not-allowed"

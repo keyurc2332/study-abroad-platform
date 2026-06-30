@@ -69,7 +69,7 @@ export default function CountryComparison() {
               <p className="inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.24em] text-sky-100">
                 Destination planner
               </p>
-              <h1 className="mt-4 max-w-2xl text-3xl leading-tight sm:text-4xl">
+              <h1 className="mt-4 max-w-2xl text-2xl leading-tight sm:text-4xl">
                 Compare study destinations without fighting the layout.
               </h1>
               <p className="mt-3 max-w-2xl text-sm text-slate-200 sm:text-base">
@@ -125,7 +125,7 @@ export default function CountryComparison() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {availableCountries.map((country) => {
               const isSelected = validSelectedCountries.includes(country);
               const info = countryData[country];
@@ -309,7 +309,7 @@ export default function CountryComparison() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="rounded-[28px] border border-dashed border-slate-200 bg-white/90 p-12 text-center shadow-sm"
+            className="rounded-[28px] border border-dashed border-slate-200 bg-white/90 p-8 text-center shadow-sm sm:p-12"
           >
             <Globe2 className="mx-auto mb-4 h-16 w-16 text-slate-300" />
             <p className="text-slate-600">Select at least one country to start comparing.</p>

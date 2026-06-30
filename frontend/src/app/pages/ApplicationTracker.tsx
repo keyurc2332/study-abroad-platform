@@ -158,7 +158,7 @@ export default function ApplicationTracker() {
 
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }}
-          className="mb-8 flex items-end justify-between gap-4">
+          className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <p className="text-xs font-medium uppercase tracking-widest text-blue-600 mb-1">Phase 2</p>
             <h1 className="text-3xl text-slate-900">Application Tracker</h1>
@@ -167,13 +167,13 @@ export default function ApplicationTracker() {
             </p>
           </div>
           <button onClick={() => setShowAdd(true)}
-            className="flex items-center gap-2 rounded-2xl bg-blue-600 px-5 py-2.5 text-sm text-white hover:bg-blue-700 shadow-lg shadow-blue-200 transition-colors">
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-2.5 text-sm text-white shadow-lg shadow-blue-200 transition-colors hover:bg-blue-700 sm:w-auto">
             <Plus className="h-4 w-4" /> Add University
           </button>
         </motion.div>
 
         {/* Status pipeline */}
-        <div className="mb-6 grid grid-cols-3 gap-3 sm:grid-cols-6">
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {STATUSES.map(s => {
             const cfg = STATUS_CONFIG[s];
             return (
@@ -211,12 +211,12 @@ export default function ApplicationTracker() {
 
         {/* Empty state */}
         {!loading && applications.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="flex flex-col items-center justify-center px-4 py-20 text-center sm:py-24">
             <Building2 className="h-16 w-16 text-slate-200 mb-4" />
             <h3 className="text-lg font-medium text-slate-700 mb-2">No applications yet</h3>
             <p className="text-sm text-slate-500 mb-6">Click "Add University" to start tracking your applications</p>
             <button onClick={() => setShowAdd(true)}
-              className="flex items-center gap-2 rounded-2xl bg-blue-600 px-6 py-3 text-sm text-white hover:bg-blue-700">
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 py-3 text-sm text-white hover:bg-blue-700 sm:w-auto">
               <Plus className="h-4 w-4" /> Add Your First University
             </button>
           </div>
@@ -239,7 +239,7 @@ export default function ApplicationTracker() {
 
                     {/* University info */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="mb-1 flex flex-wrap items-center gap-2">
                         <h3 className="text-base font-semibold text-slate-900">
                           {FLAGS[app.university.country] ?? "🌍"} {app.university.name}
                         </h3>
@@ -266,7 +266,7 @@ export default function ApplicationTracker() {
                     </div>
 
                     {/* Status + actions */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3 sm:flex-nowrap">
                       {/* Status dropdown */}
                       <div className="relative">
                         <select
@@ -308,12 +308,12 @@ export default function ApplicationTracker() {
         <AnimatePresence>
           {showAdd && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+              className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-3 sm:items-center sm:p-4"
               onClick={e => e.target === e.currentTarget && setShowAdd(false)}>
               <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl">
-                <div className="flex items-center justify-between mb-5">
+                className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white p-4 shadow-2xl sm:p-6">
+                <div className="mb-5 flex items-center justify-between gap-3">
                   <h3 className="text-lg font-semibold text-slate-900">Add University to Tracker</h3>
                   <button onClick={() => setShowAdd(false)} className="rounded-xl p-2 hover:bg-slate-100 transition-colors">
                     <X className="h-5 w-5 text-slate-500" />
@@ -336,7 +336,7 @@ export default function ApplicationTracker() {
                   <div className="mb-4 rounded-2xl border border-slate-200 overflow-hidden max-h-60 overflow-y-auto">
                     {addResults.map(u => (
                       <button key={u.id} onClick={() => { setSelectedUni(u); setAddSearch(u.name); setAddResults([]); }}
-                        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-blue-50 transition-colors border-b border-slate-100 last:border-0">
+                        className="flex w-full items-start justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-blue-50 border-b border-slate-100 last:border-0">
                         <div>
                           <p className="text-sm font-medium text-slate-900">{FLAGS[u.country] ?? "🌍"} {u.name}</p>
                           <p className="text-xs text-slate-500">{u.city}, {u.country}</p>
@@ -371,7 +371,7 @@ export default function ApplicationTracker() {
                   </div>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row">
                   <button onClick={() => setShowAdd(false)}
                     className="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition-colors">
                     Cancel

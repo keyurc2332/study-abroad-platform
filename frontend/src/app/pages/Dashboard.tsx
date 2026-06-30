@@ -224,7 +224,7 @@ export default function Dashboard() {
             className="space-y-6"
           >
             <div>
-              <div className="mb-4 flex items-end justify-between gap-3">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <h2 className="text-xl text-slate-900">Quick actions</h2>
                   <p className="text-sm text-slate-600">Jump straight into the next meaningful step.</p>
@@ -260,12 +260,12 @@ export default function Dashboard() {
             </div>
 
             <div className="rounded-[24px] border border-slate-200/70 bg-white/90 p-5 shadow-sm">
-              <div className="mb-5 flex items-end justify-between gap-3">
+              <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <h2 className="text-xl text-slate-900">Recent activity</h2>
                   <p className="text-sm text-slate-600">The dashboard updates as you work across the app.</p>
                 </div>
-                <Link to="/profile" className="text-sm text-blue-700 hover:text-blue-800">
+                <Link to="/profile" className="self-start text-sm text-blue-700 hover:text-blue-800 sm:self-auto">
                   View profile
                 </Link>
               </div>
@@ -283,7 +283,7 @@ export default function Dashboard() {
                       <p className="text-sm text-slate-900">{activity.action}</p>
                       <p className="mt-1 text-xs text-slate-500">{formatRelativeTime(activity.createdAt)}</p>
                     </div>
-                    <Link to={activity.path} className="self-start text-xs text-blue-700 hover:text-blue-800">
+                    <Link to={activity.path} className="shrink-0 self-start text-xs text-blue-700 hover:text-blue-800">
                       Open
                     </Link>
                   </motion.div>
@@ -299,9 +299,9 @@ export default function Dashboard() {
             className="space-y-6"
           >
             <div className="rounded-[24px] border border-slate-200/70 bg-white/90 p-5 shadow-sm">
-              <div className="mb-4 flex items-center justify-between gap-3">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h2 className="text-xl text-slate-900">Upcoming deadlines</h2>
-                <Link to="/universities" className="text-sm text-blue-700 hover:text-blue-800">
+                <Link to="/universities" className="self-start text-sm text-blue-700 hover:text-blue-800 sm:self-auto">
                   Manage shortlist
                 </Link>
               </div>

@@ -68,7 +68,7 @@ export default function Roadmap() {
             <div className="absolute inset-0 flex items-center justify-center px-5 text-center text-white sm:px-8">
               <div>
                 <h1 className="text-3xl sm:text-4xl">Study Abroad Roadmap</h1>
-                <p className="mt-3 text-sm text-blue-100 sm:text-base">
+                <p className="mx-auto mt-3 max-w-2xl text-sm text-blue-100 sm:text-base">
                   Turn the roadmap into a working checklist by toggling each task as you move forward.
                 </p>
               </div>
@@ -211,7 +211,7 @@ export default function Roadmap() {
           viewport={{ once: true }}
           className="mt-10 rounded-[24px] border border-yellow-200 bg-yellow-50 p-5 sm:p-6"
         >
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <AlertCircle className="h-6 w-6 flex-shrink-0 text-yellow-600" />
             <div>
               <h3 className="text-gray-900">Important reminders</h3>

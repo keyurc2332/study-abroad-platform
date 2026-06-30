@@ -22,18 +22,18 @@ export default function Root() {
 
   return (
     <div className="min-h-screen bg-[linear-gradient(135deg,#e8f1ff_0%,#f7fbff_44%,#eef5ff_100%)]">
-      <nav className="relative z-50 px-3 pt-3 sm:px-4 lg:px-5">
-        <div className="mx-auto max-w-[1500px] rounded-t-[28px] border-x border-t border-white/80 bg-white/95 shadow-[0_18px_55px_rgba(37,99,235,0.12)] backdrop-blur-xl">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-          <div className="flex min-h-[82px] items-center justify-between gap-4 py-3">
+      <nav className="relative z-50 px-2 pt-2 sm:px-4 sm:pt-3 lg:px-5">
+        <div className="mx-auto max-w-[1500px] rounded-t-[20px] border-x border-t border-white/80 bg-white/95 shadow-[0_18px_55px_rgba(37,99,235,0.12)] backdrop-blur-xl sm:rounded-t-[28px]">
+          <div className="mx-auto max-w-7xl px-3 sm:px-8 lg:px-10">
+          <div className="flex min-h-[68px] items-center justify-between gap-3 py-3 sm:min-h-[82px] sm:gap-4">
             <div className="flex items-center">
               <Link to="/" className="flex items-center gap-3">
-                <div className="flex h-[54px] w-[54px] items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-700 text-white shadow-lg shadow-blue-200/90">
-                  <GraduationCap className="h-7 w-7" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-700 text-white shadow-lg shadow-blue-200/90 sm:h-[54px] sm:w-[54px]">
+                  <GraduationCap className="h-6 w-6 sm:h-7 sm:w-7" />
                 </div>
                 <div>
-                  <span className="block text-xl leading-6 text-slate-950">StudyAbroad</span>
-                  <span className="block text-xs uppercase tracking-[0.26em] text-slate-500">
+                  <span className="block text-lg leading-6 text-slate-950 sm:text-xl">StudyAbroad</span>
+                  <span className="block text-[10px] uppercase tracking-[0.2em] text-slate-500 sm:text-xs sm:tracking-[0.26em]">
                     Planner
                   </span>
                 </div>
@@ -78,7 +78,7 @@ export default function Root() {
             <div className="flex items-center xl:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition-colors hover:text-slate-900"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition-colors hover:text-slate-900"
                 aria-label="Toggle navigation menu"
               >
                 {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -97,7 +97,7 @@ export default function Root() {
               className="overflow-hidden border-t border-slate-200 xl:hidden"
             >
               <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
-                <div className="space-y-2 rounded-[24px] bg-white p-3 shadow-sm">
+                <div className="max-h-[calc(100vh-96px)] space-y-2 overflow-y-auto rounded-[20px] bg-white p-3 shadow-sm sm:rounded-[24px]">
                   {navItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.path;
