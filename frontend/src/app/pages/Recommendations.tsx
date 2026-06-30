@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   AlertCircle, ArrowRight, BookOpen, CheckCircle, ChevronDown,
   DollarSign, ExternalLink, Globe, GraduationCap, MapPin,

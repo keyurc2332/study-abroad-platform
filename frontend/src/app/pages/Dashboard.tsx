@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { Link } from "react-router";
 import {
   ArrowRight,
@@ -55,7 +55,7 @@ export default function Dashboard() {
     roadmap.find((milestone) => milestone.status === "in-progress") ?? roadmap[0];
 
   const upcomingDeadlines = universities
-    .filter((university) => shortlisted.includes(university.id))
+    .filter((university) => shortlisted.includes(String(university.id)))
     .sort(
       (left, right) =>
         new Date(left.applicationDeadline).getTime() - new Date(right.applicationDeadline).getTime(),

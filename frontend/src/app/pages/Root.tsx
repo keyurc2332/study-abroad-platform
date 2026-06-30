@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from "react-router";
 import { GraduationCap, Home, User, Globe, Building2, FileCheck, Map, Menu, X, Sparkles, Award, ClipboardList } from "lucide-react";
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Root() {
   const location = useLocation();

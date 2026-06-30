@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2, Calendar, CheckCircle, ChevronDown, Clock,
   ExternalLink, Loader2, MapPin, Plus, Search, Star,

@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { AlertCircle, CheckCircle2, Circle, Clock } from "lucide-react";
 import {
   STORAGE_KEYS,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import {
   Award, BookOpen, Calendar, DollarSign, ExternalLink,
   Filter, Globe, Loader2, RefreshCw, Search, Sparkles, Star, TrendingUp,

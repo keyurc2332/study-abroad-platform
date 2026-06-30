@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { Briefcase, Check, Clock, DollarSign, Globe2, GraduationCap, TrendingUp, X } from "lucide-react";
 import {
   STORAGE_KEYS,

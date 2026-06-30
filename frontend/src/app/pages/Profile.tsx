@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { useState, type ChangeEvent, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 import {
