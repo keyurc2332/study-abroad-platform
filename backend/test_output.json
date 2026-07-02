@@ -1,0 +1,26 @@
+{
+  "enriched": [
+    {
+      "universityName": "University of Toronto",
+      "country": "Canada",
+      "tier": "STRONG",
+      "competitivenessScore": 7,
+      "typicalGPARange": "3.5–3.8",
+      "researchIntensity": "High",
+      "score": 85,
+      "geminiEnhanced": false
+    },
+    {
+      "universityName": "Stanford University",
+      "country": "USA",
+      "tier": "ELITE",
+      "competitivenessScore": 9,
+      "typicalGPARange": "3.8–3.95",
+      "researchIntensity": "Very High",
+      "score": 45,
+      "geminiEnhanced": false
+    }
+  ],
+  "geminiUsed": true,
+  "enrichedCount": 0
+}

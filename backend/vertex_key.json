@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "nabble-prod-student-app",
+  "private_key_id": "be3a3263bd3e431a0a1ccb4975d7b5930cd4cb63",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCrlXSJBA/X5bwL\nHrOAMJLQflRn+bEHUnAxzsNyxl5bjHd6i3his7urn2KxfpSsV3KqIpG0hz/LewRP\nrYkbzwlaK+QWiwLyTfUFN5qLBt3DVNlHKkIvRKgn/W05TOcKeLIQYjYvXWPCc5zi\nPLROAghsv96lxav/gXUxCP+Kxqgn0uGcp1WDrnZhivFjoXX+NYJT6akbGLyzGqTw\nH2MePGFzdSjH6Q71lKTlRsvzaninjoIW98cLCYADSaBAe3X5LfZK+3Va/4LiEBU6\nkBZ9GfAp2M6HCCAnoj/CVB9r8cN/vWYze5zsjyG2eZ0bLFHRCy7PppCiVkPPRAqN\naq7sSf+1AgMBAAECggEAJPjysD6HknA+rY+7QpVU4WfDVNdFKex94AGrdF0hwmzZ\nZvbMJUqQ1ymkSNZbf2plexsxVdrp6HT0yB1+5Jbfb0ZzYtcn9qHNOQdS/f+oA/nR\nyuekdM6AxIMziKwVQdihl+2tutWPFDy40rgdawy9l39doM9gIVGaOMt1Uwg8/j10\njN8TJc2EZuFiYd6PyfARNCkIUlK0EQ/bEs7GztSmItJA13cmsv/LiZKier88z1h8\ndUktNta2a0VMF2J4BAg4MgjPOuGSX17acw+445wIR0FrHwXyTjLaN4PwKv57ifaw\nJgJGarXSb9y5tjF05y0XvlnIqSAccmDdtrMMWsBOgQKBgQDR4H+F6eoTdYxtUTA9\nq4bdCnPzj4bHX3AJFhdLSXUV9+DaQYTGEUoEucSiWE37ikX77rcoGMlKgB27Seqb\nQdUDZHZhlkkJ40wp1M4IPQa3Z7bCBGpActkR8Rdgm+b4rFQtSBupTDambGVpPyq4\nuu7ZiSFQ0GwC5kf3vCU85pSjgQKBgQDRSp3/G4Lgfy8y1xHADo8+ypFw3qDB4Qxy\nsrEgSl3xt7ZNj2pEvyylTXa2tTUNHPhBrG0dwHfLSEBXP4xfvpSwtdY6LH2QZSA4\nyanIeCfafeCU44KNrbjcV9gsDJCDa5wySRgAsmtlQ9Sy2RR9f2Fjjo+Zp76HAKCG\nbZI8Ir8mNQKBgQDMBd5R8uO/CO17M4qe2MjgxhGT+rl9xRQncRcx8/XjZjVqVnjZ\nBuOalnBFlWwxk+iWkSfxza6YQtUkRSXQyf1mL9o44ZydBR38KEglkBWgYy0xjJMx\nlbPZEjK0krnEkdm+rzNcr58Mx6EJ4AMK04XvaLQ/WG03oF7jwD2+5zQlgQKBgEI6\nzaLEDveB5+q7umc/dD8XlUzVdqPD1s+ZEoo4XmA2lZ8XqjZVFQi+abnJwB8FMt59\ndQ48MOyIUawKdR57TcxZzpAcMiP2jGrMDkldFKeEvAQBtvekqOI5fjP6SeT8sbIM\nBWd7Dpc+DtoF7gEExUne/DxQo+9O2H2RwPv8tuadAoGAL0aDemj/qlaWTGl/OxG0\nfYGSNWu115AhwBM1AugGtemDpu8uKFiXZpTFPppC2+lS3UoHyNEfgG9Gq+Zjr5Ee\npDaZpDKbcP+9ctXmT3uv/6jPvBtcQEnG1SVCWAb4Zh0gLExui8LvPy+omz1Fe1ec\nPX1mH8Pmd1q9hy00VDxhv+w=\n-----END PRIVATE KEY-----\n",
+  "client_email": "ai-tutor@nabble-prod-student-app.iam.gserviceaccount.com",
+  "client_id": "105641961636913890436",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ai-tutor%40nabble-prod-student-app.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
