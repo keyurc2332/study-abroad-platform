@@ -1,301 +1,289 @@
 import { motion } from "motion/react";
-import { useState } from "react";
-import { User, Mail, Phone, Calendar, GraduationCap, Save, Edit2 } from "lucide-react";
+import { useState, type ChangeEvent, type ReactNode } from "react";
+import { useNavigate } from "react-router";
+import {
+  ArrowRight, BookOpen, Briefcase, Calendar, Edit2,
+  GraduationCap, Mail, Phone, Save, Sparkles, User, X,
+} from "lucide-react";
+import {
+  STORAGE_KEYS, appendActivity, defaultProfile,
+  type ProfileData, usePersistentState,
+} from "../data/studyAbroadData";
+
+const COUNTRIES = ["United States", "United Kingdom", "Canada", "Australia", "Germany", "Japan"];
+const DEGREES   = ["Bachelor's", "Master's", "PhD", "Diploma"];
+const FIELDS    = ["Computer Science","Artificial Intelligence","Data Science","Engineering","Business","Finance","Medicine","Law","Architecture","Arts & Design"];
+const BUDGETS   = ["Under $20,000","$20,000 - $40,000","$40,000 - $60,000","$60,000 - $80,000","Over $80,000"];
+const LANG_TESTS = ["IELTS 6.0","IELTS 6.5","IELTS 7.0","IELTS 7.5","IELTS 8.0","TOEFL 80","TOEFL 90","TOEFL 100","TOEFL 110","Duolingo 110","Duolingo 125","PTE 58","PTE 65"];
+
+function isProfileComplete(p: ProfileData) {
+  return !!(p.fullName && p.gpa && p.desiredDegree && p.fieldOfStudy && p.budgetRange && p.preferredCountries.length);
+}
 
 export default function Profile() {
+  const [profile, setProfile] = usePersistentState(STORAGE_KEYS.profile, defaultProfile);
+  const [draft, setDraft] = useState<ProfileData>(profile);
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: "John Doe",
-    email: "john.doe@email.com",
-    phone: "+1 234 567 8900",
-    dateOfBirth: "1998-05-15",
-    currentEducation: "Bachelor's in Computer Science",
-    gpa: "3.8",
-    desiredDegree: "Master's",
-    preferredCountries: ["United States", "United Kingdom", "Canada"],
-    fieldOfStudy: "Computer Science",
-    budgetRange: "$30,000 - $50,000",
-    englishProficiency: "IELTS - 7.5",
-    workExperience: "2 years",
-  });
+  const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setDraft({ ...draft, [e.target.name]: e.target.value });
+  };
+
+  const toggleCountry = (c: string) => {
+    const has = draft.preferredCountries.includes(c);
+    setDraft({ ...draft, preferredCountries: has ? draft.preferredCountries.filter(x => x !== c) : [...draft.preferredCountries, c] });
   };
 
   const handleSave = () => {
+    setProfile(draft);
     setIsEditing(false);
-    // Save logic here
+    appendActivity({ action: "Updated profile preferences", path: "/profile", type: "profile" });
   };
 
-  const countries = ["United States", "United Kingdom", "Canada", "Australia", "Germany", "Japan"];
+  const active = isEditing ? draft : profile;
+  const complete = isProfileComplete(profile);
+  const initials = profile.fullName.split(" ").map(n => n[0]).join("").slice(0, 2);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#f0f5ff_0%,#f8fafc_60%)] py-6 sm:py-10">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8 flex justify-between items-center"
-        >
+        <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }}
+          className="mb-8 flex items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl text-gray-900 mb-2">Student Profile</h1>
-            <p className="text-gray-600">Manage your personal information and preferences</p>
+            <p className="text-xs font-medium uppercase tracking-widest text-blue-600 mb-1">Your Profile</p>
+            <h1 className="text-3xl text-slate-900">Study Preferences</h1>
+            <p className="mt-1.5 text-sm text-slate-500">Tell us about yourself so we can find the best universities for you.</p>
           </div>
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Edit2 className="w-4 h-4" />
-            {isEditing ? "Cancel" : "Edit Profile"}
-          </button>
-        </motion.div>
-
-        {/* Profile Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-white rounded-lg shadow-sm overflow-hidden mb-8"
-        >
-          <div className="relative h-32 bg-gradient-to-r from-blue-600 to-indigo-600">
-            <img 
-              src="https://images.unsplash.com/photo-1627556704263-b486db44a463?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHVkZW50JTIwcHJvZmlsZSUyMGVkdWNhdGlvbiUyMGludGVybmF0aW9uYWx8ZW58MXx8fHwxNzc2Njc2OTg0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-              alt="Profile Background"
-              className="w-full h-full object-cover opacity-20"
-            />
-          </div>
-          <div className="px-8 pb-8">
-            <div className="flex items-end gap-6 -mt-12 mb-6">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white text-3xl border-4 border-white shadow-lg">
-                {formData.fullName.split(" ").map(n => n[0]).join("")}
-              </div>
-              <div className="mb-2">
-                <h2 className="text-2xl text-gray-900 mb-1">{formData.fullName}</h2>
-                <p className="text-gray-600">{formData.currentEducation}</p>
-              </div>
-            </div>
-            <div className="h-px bg-gray-200 mb-8" />
-
-            {/* Personal Information */}
-            <div className="mb-8">
-            <h3 className="text-lg text-gray-900 mb-4">Personal Information</h3>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">
-                  <User className="w-4 h-4 inline mr-2" />
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-600"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">
-                  <Mail className="w-4 h-4 inline mr-2" />
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-600"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">
-                  <Phone className="w-4 h-4 inline mr-2" />
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-600"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">
-                  <Calendar className="w-4 h-4 inline mr-2" />
-                  Date of Birth
-                </label>
-                <input
-                  type="date"
-                  name="dateOfBirth"
-                  value={formData.dateOfBirth}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-600"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Academic Information */}
-          <div className="mb-8">
-            <h3 className="text-lg text-gray-900 mb-4">Academic Information</h3>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">
-                  <GraduationCap className="w-4 h-4 inline mr-2" />
-                  Current Education
-                </label>
-                <input
-                  type="text"
-                  name="currentEducation"
-                  value={formData.currentEducation}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-600"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">GPA / Percentage</label>
-                <input
-                  type="text"
-                  name="gpa"
-                  value={formData.gpa}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-600"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">Desired Degree</label>
-                <select
-                  name="desiredDegree"
-                  value={formData.desiredDegree}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-600"
-                >
-                  <option>Bachelor's</option>
-                  <option>Master's</option>
-                  <option>PhD</option>
-                  <option>Diploma</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">Field of Study</label>
-                <input
-                  type="text"
-                  name="fieldOfStudy"
-                  value={formData.fieldOfStudy}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-600"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">English Proficiency</label>
-                <input
-                  type="text"
-                  name="englishProficiency"
-                  value={formData.englishProficiency}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-600"
-                  placeholder="e.g., IELTS 7.5, TOEFL 100"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">Work Experience</label>
-                <input
-                  type="text"
-                  name="workExperience"
-                  value={formData.workExperience}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-600"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Study Preferences */}
-          <div className="mb-8">
-            <h3 className="text-lg text-gray-900 mb-4">Study Preferences</h3>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="md:col-span-2">
-                <label className="block text-sm text-gray-700 mb-2">Preferred Countries</label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {countries.map((country) => (
-                    <label
-                      key={country}
-                      className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${
-                        formData.preferredCountries.includes(country)
-                          ? "bg-blue-50 border-blue-600"
-                          : "border-gray-300 hover:border-gray-400"
-                      } ${!isEditing ? "opacity-60 cursor-not-allowed" : ""}`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={formData.preferredCountries.includes(country)}
-                        disabled={!isEditing}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setFormData({
-                              ...formData,
-                              preferredCountries: [...formData.preferredCountries, country],
-                            });
-                          } else {
-                            setFormData({
-                              ...formData,
-                              preferredCountries: formData.preferredCountries.filter(c => c !== country),
-                            });
-                          }
-                        }}
-                        className="rounded border-gray-300"
-                      />
-                      <span className="text-sm text-gray-700">{country}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">Budget Range (per year)</label>
-                <input
-                  type="text"
-                  name="budgetRange"
-                  value={formData.budgetRange}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-50 disabled:text-gray-600"
-                />
-              </div>
-            </div>
-          </div>
-
-            {/* Save Button */}
-            {isEditing && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex justify-end"
-              >
-                <button
-                  onClick={handleSave}
-                  className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  <Save className="w-4 h-4" />
-                  Save Changes
+          <div className="flex gap-3">
+            {isEditing ? (
+              <>
+                <button onClick={() => { setDraft(profile); setIsEditing(false); }}
+                  className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors">
+                  <X className="h-4 w-4" /> Cancel
                 </button>
-              </motion.div>
+                <button onClick={handleSave}
+                  className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm text-white hover:bg-blue-700 shadow-lg shadow-blue-200 transition-colors">
+                  <Save className="h-4 w-4" /> Save
+                </button>
+              </>
+            ) : (
+              <button onClick={() => { setDraft(profile); setIsEditing(true); }}
+                className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm text-white hover:bg-blue-700 shadow-lg shadow-blue-200 transition-colors">
+                <Edit2 className="h-4 w-4" /> Edit Profile
+              </button>
             )}
           </div>
         </motion.div>
+
+        {/* Profile card */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+          className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 to-blue-900 p-6 text-white shadow-xl">
+          <div className="flex items-center gap-5">
+            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 text-2xl font-semibold backdrop-blur">
+              {initials || <User className="h-8 w-8" />}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-xl text-white">{active.fullName || "Your Name"}</h2>
+              <p className="text-sm text-blue-200">{active.currentEducation || "Add your education"}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {active.desiredDegree && <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-xs">{active.desiredDegree}</span>}
+                {active.fieldOfStudy && <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-xs">{active.fieldOfStudy}</span>}
+                {active.gpa && <span className="rounded-full bg-white/15 px-2.5 py-0.5 text-xs">GPA: {active.gpa}</span>}
+              </div>
+            </div>
+            <div className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs ${complete ? "bg-green-500/20 text-green-300" : "bg-orange-500/20 text-orange-300"}`}>
+              <div className={`h-1.5 w-1.5 rounded-full ${complete ? "bg-green-400" : "bg-orange-400"}`} />
+              {complete ? "Profile complete" : "Incomplete"}
+            </div>
+          </div>
+        </motion.div>
+
+        <div className="space-y-5">
+
+          {/* Personal Info */}
+          <Section title="Personal Information" icon={<User className="h-4 w-4" />} delay={0.15}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Full Name">
+                <Input name="fullName" value={active.fullName} onChange={handleChange} disabled={!isEditing} placeholder="Aarav Sharma" icon={<User className="h-4 w-4" />} />
+              </Field>
+              <Field label="Email Address">
+                <Input name="email" value={active.email} onChange={handleChange} disabled={!isEditing} type="email" placeholder="you@email.com" icon={<Mail className="h-4 w-4" />} />
+              </Field>
+              <Field label="Phone Number">
+                <Input name="phone" value={active.phone} onChange={handleChange} disabled={!isEditing} type="tel" placeholder="+91 98765 43210" icon={<Phone className="h-4 w-4" />} />
+              </Field>
+              <Field label="Date of Birth">
+                <Input name="dateOfBirth" value={active.dateOfBirth} onChange={handleChange} disabled={!isEditing} type="date" icon={<Calendar className="h-4 w-4" />} />
+              </Field>
+            </div>
+          </Section>
+
+          {/* Academic Info */}
+          <Section title="Academic Background" icon={<GraduationCap className="h-4 w-4" />} delay={0.2}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Current Education">
+                <Input name="currentEducation" value={active.currentEducation} onChange={handleChange} disabled={!isEditing} placeholder="B.Tech Computer Science" icon={<BookOpen className="h-4 w-4" />} />
+              </Field>
+              <Field label="GPA / Percentage">
+                <Input name="gpa" value={active.gpa} onChange={handleChange} disabled={!isEditing} placeholder="8.4/10 or 85%" icon={<GraduationCap className="h-4 w-4" />} />
+              </Field>
+              <Field label="Target Degree">
+                {isEditing ? (
+                  <select name="desiredDegree" value={active.desiredDegree} onChange={handleChange}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100">
+                    {DEGREES.map(d => <option key={d}>{d}</option>)}
+                  </select>
+                ) : (
+                  <Input name="desiredDegree" value={active.desiredDegree} onChange={handleChange} disabled={true} />
+                )}
+              </Field>
+              <Field label="Field of Study">
+                {isEditing ? (
+                  <select name="fieldOfStudy" value={active.fieldOfStudy} onChange={handleChange}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100">
+                    <option value="">Select field...</option>
+                    {FIELDS.map(f => <option key={f}>{f}</option>)}
+                  </select>
+                ) : (
+                  <Input name="fieldOfStudy" value={active.fieldOfStudy} onChange={handleChange} disabled={true} />
+                )}
+              </Field>
+              <Field label="English Proficiency">
+                {isEditing ? (
+                  <select name="englishProficiency" value={active.englishProficiency} onChange={handleChange}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100">
+                    <option value="">Select test score...</option>
+                    {LANG_TESTS.map(t => <option key={t}>{t}</option>)}
+                  </select>
+                ) : (
+                  <Input name="englishProficiency" value={active.englishProficiency} onChange={handleChange} disabled={true} />
+                )}
+              </Field>
+              <Field label="Work Experience">
+                <Input name="workExperience" value={active.workExperience} onChange={handleChange} disabled={!isEditing} placeholder="e.g. 2 years, None" icon={<Briefcase className="h-4 w-4" />} />
+              </Field>
+            </div>
+          </Section>
+
+          {/* Study Preferences */}
+          <Section title="Study Preferences" icon={<Sparkles className="h-4 w-4" />} delay={0.25}>
+            <div className="space-y-5">
+              <Field label="Preferred Countries">
+                <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                  {COUNTRIES.map(c => {
+                    const checked = active.preferredCountries.includes(c);
+                    return (
+                      <button key={c} type="button"
+                        disabled={!isEditing}
+                        onClick={() => isEditing && toggleCountry(c)}
+                        className={`flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-sm text-left transition-all ${
+                          checked ? "border-blue-500 bg-blue-50 text-blue-700" : "border-slate-200 bg-white text-slate-600"
+                        } ${isEditing ? "cursor-pointer hover:border-blue-400" : "opacity-80"}`}>
+                        <div className={`h-4 w-4 rounded border-2 flex items-center justify-center flex-shrink-0 ${checked ? "border-blue-500 bg-blue-500" : "border-slate-300"}`}>
+                          {checked && <svg viewBox="0 0 10 8" className="h-2.5 w-2.5 fill-white"><path d="M1 4l2.5 2.5L9 1"/></svg>}
+                        </div>
+                        {c}
+                      </button>
+                    );
+                  })}
+                </div>
+              </Field>
+
+              <Field label="Annual Budget (USD)">
+                {isEditing ? (
+                  <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
+                    {BUDGETS.map(b => (
+                      <button key={b} type="button" onClick={() => setDraft({ ...draft, budgetRange: b })}
+                        className={`rounded-xl border px-3 py-2.5 text-xs text-center transition-all ${
+                          draft.budgetRange === b ? "border-blue-500 bg-blue-50 text-blue-700 font-medium" : "border-slate-200 bg-white text-slate-600 hover:border-blue-300"
+                        }`}>
+                        {b}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <Input name="budgetRange" value={active.budgetRange} onChange={handleChange} disabled={true} />
+                )}
+              </Field>
+            </div>
+          </Section>
+
+        </div>
+
+        {/* CTA to Recommendations */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
+          className="mt-8 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white shadow-xl shadow-blue-200">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="text-lg">Ready to see your matches?</h3>
+              <p className="mt-1 text-sm text-blue-100">
+                {complete
+                  ? "Your profile is complete — view AI-powered university recommendations."
+                  : "Complete your profile above to get personalized university recommendations."}
+              </p>
+            </div>
+            <button
+              onClick={() => { if (complete) navigate("/recommendations"); }}
+              disabled={!complete}
+              className={`flex items-center gap-2 rounded-2xl px-6 py-3 text-sm font-medium whitespace-nowrap transition-all ${
+                complete
+                  ? "bg-white text-blue-700 hover:bg-blue-50 shadow-lg cursor-pointer"
+                  : "bg-white/20 text-white/60 cursor-not-allowed"
+              }`}>
+              <Sparkles className="h-4 w-4" />
+              Get Recommendations
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+          {!complete && (
+            <div className="mt-4 flex flex-wrap gap-2 text-xs text-blue-200">
+              {!profile.gpa && <span className="rounded-full bg-white/10 px-2.5 py-1">+ Add GPA</span>}
+              {!profile.fieldOfStudy && <span className="rounded-full bg-white/10 px-2.5 py-1">+ Add field of study</span>}
+              {!profile.budgetRange && <span className="rounded-full bg-white/10 px-2.5 py-1">+ Add budget</span>}
+              {!profile.preferredCountries.length && <span className="rounded-full bg-white/10 px-2.5 py-1">+ Select countries</span>}
+            </div>
+          )}
+        </motion.div>
+
       </div>
+    </div>
+  );
+}
+
+function Section({ title, icon, children, delay = 0 }: { title: string; icon: ReactNode; children: ReactNode; delay?: number }) {
+  return (
+    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}
+      className="rounded-3xl border border-slate-200/70 bg-white/90 p-5 shadow-sm sm:p-6">
+      <div className="mb-5 flex items-center gap-2.5">
+        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-600">{icon}</div>
+        <h3 className="text-base font-medium text-slate-900">{title}</h3>
+      </div>
+      {children}
+    </motion.div>
+  );
+}
+
+function Field({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div>
+      <label className="mb-2 block text-sm text-slate-600">{label}</label>
+      {children}
+    </div>
+  );
+}
+
+function Input({ icon, disabled, ...props }: { icon?: ReactNode; disabled?: boolean; [k: string]: any }) {
+  return (
+    <div className="relative">
+      {icon && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{icon}</span>}
+      <input
+        {...props}
+        disabled={disabled}
+        className={`w-full rounded-xl border border-slate-200 py-3 text-sm text-slate-800 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 ${icon ? "pl-9 pr-4" : "px-4"} ${disabled ? "bg-slate-50 text-slate-600" : "bg-white"}`}
+      />
     </div>
   );
 }

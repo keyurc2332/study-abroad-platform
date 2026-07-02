@@ -1,328 +1,290 @@
 import { motion } from "motion/react";
-import { useState } from "react";
+import type { ReactNode } from "react";
+import { Link } from "react-router";
 import {
-  FileText,
-  Upload,
+  AlertCircle,
   CheckCircle2,
   Circle,
   Download,
-  AlertCircle,
-  Calendar,
+  FileText,
+  Upload,
 } from "lucide-react";
+import {
+  STORAGE_KEYS,
+  appendActivity,
+  defaultDocuments,
+  getDocumentStatusLabel,
+  type DocumentItem,
+  usePersistentState,
+} from "../data/studyAbroadData";
 
 export default function DocumentChecklist() {
-  const [documents, setDocuments] = useState([
-    {
-      id: 1,
-      name: "Academic Transcripts",
-      description: "Official transcripts from all institutions attended",
-      status: "completed",
-      required: true,
-      uploadDate: "2026-04-01",
-    },
-    {
-      id: 2,
-      name: "Passport Copy",
-      description: "Valid passport with at least 6 months validity",
-      status: "completed",
-      required: true,
-      uploadDate: "2026-03-28",
-    },
-    {
-      id: 3,
-      name: "English Proficiency Test",
-      description: "IELTS, TOEFL, or equivalent test scores",
-      status: "completed",
-      required: true,
-      uploadDate: "2026-04-05",
-    },
-    {
-      id: 4,
-      name: "Statement of Purpose",
-      description: "Personal essay explaining your academic goals",
-      status: "completed",
-      required: true,
-      uploadDate: "2026-04-10",
-    },
-    {
-      id: 5,
-      name: "Letters of Recommendation",
-      description: "2-3 letters from professors or employers",
-      status: "completed",
-      required: true,
-      uploadDate: "2026-04-08",
-    },
-    {
-      id: 6,
-      name: "Resume/CV",
-      description: "Updated resume highlighting relevant experience",
-      status: "pending",
-      required: true,
-      uploadDate: null,
-    },
-    {
-      id: 7,
-      name: "Financial Documents",
-      description: "Bank statements or sponsorship letters",
-      status: "pending",
-      required: true,
-      uploadDate: null,
-    },
-    {
-      id: 8,
-      name: "Standardized Test Scores",
-      description: "GRE/GMAT scores if required by university",
-      status: "pending",
-      required: false,
-      uploadDate: null,
-    },
-    {
-      id: 9,
-      name: "Portfolio",
-      description: "For creative or design programs",
-      status: "pending",
-      required: false,
-      uploadDate: null,
-    },
-    {
-      id: 10,
-      name: "Copy of Degree Certificate",
-      description: "Bachelor's degree or equivalent",
-      status: "pending",
-      required: true,
-      uploadDate: null,
-    },
-    {
-      id: 11,
-      name: "Visa Application Form",
-      description: "Completed visa application",
-      status: "not-started",
-      required: true,
-      uploadDate: null,
-    },
-    {
-      id: 12,
-      name: "Medical Certificate",
-      description: "Health clearance certificate",
-      status: "not-started",
-      required: true,
-      uploadDate: null,
-    },
-  ]);
+  const [documents, setDocuments] = usePersistentState(STORAGE_KEYS.documents, defaultDocuments);
 
   const toggleDocumentStatus = (id: number) => {
-    setDocuments(
-      documents.map((doc) => {
-        if (doc.id === id) {
-          const statuses = ["not-started", "pending", "completed"];
-          const currentIndex = statuses.indexOf(doc.status);
-          const nextStatus = statuses[(currentIndex + 1) % statuses.length];
-          return {
-            ...doc,
-            status: nextStatus,
-            uploadDate: nextStatus === "completed" ? new Date().toISOString().split("T")[0] : null,
-          };
-        }
-        return doc;
-      })
-    );
-  };
+    let nextDocument: DocumentItem | undefined;
 
-  const completedCount = documents.filter((d) => d.status === "completed").length;
-  const requiredCount = documents.filter((d) => d.required).length;
-  const completedRequired = documents.filter((d) => d.required && d.status === "completed").length;
-  const progressPercentage = Math.round((completedRequired / requiredCount) * 100);
+    const nextDocuments = documents.map((document) => {
+      if (document.id !== id) {
+        return document;
+      }
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "completed":
-        return <CheckCircle2 className="w-5 h-5 text-green-600" />;
-      case "pending":
-        return <Circle className="w-5 h-5 text-yellow-600" />;
-      default:
-        return <Circle className="w-5 h-5 text-gray-400" />;
+      const statuses = ["not-started", "pending", "completed"] as const;
+      const currentIndex = statuses.indexOf(document.status);
+      const nextStatus = statuses[(currentIndex + 1) % statuses.length];
+
+      nextDocument = {
+        ...document,
+        status: nextStatus,
+        uploadDate: nextStatus === "completed" ? new Date().toISOString().split("T")[0] : null,
+      };
+
+      return nextDocument;
+    });
+
+    setDocuments(nextDocuments);
+
+    if (nextDocument) {
+      appendActivity({
+        action: `Marked ${nextDocument.name} as ${getDocumentStatusLabel(nextDocument.status).toLowerCase()}`,
+        path: "/documents",
+        type: "document",
+      });
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "bg-green-50 border-green-200";
-      case "pending":
-        return "bg-yellow-50 border-yellow-200";
-      default:
-        return "bg-white border-gray-200";
-    }
+  const completedCount = documents.filter((document) => document.status === "completed").length;
+  const requiredCount = documents.filter((document) => document.required).length;
+  const completedRequired = documents.filter(
+    (document) => document.required && document.status === "completed",
+  ).length;
+  const progressPercentage = Math.round((completedRequired / Math.max(requiredCount, 1)) * 100);
+
+  const downloadSummary = () => {
+    const lines = [
+      "Study Abroad Document Checklist",
+      "",
+      ...documents.map(
+        (document) =>
+          `${document.name}: ${getDocumentStatusLabel(document.status)}${
+            document.uploadDate ? ` (${document.uploadDate})` : ""
+          }`,
+      ),
+    ];
+
+    const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "study-abroad-documents.txt";
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header with Image */}
+    <div className="min-h-screen bg-gray-50 py-6 sm:py-8">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <div className="relative h-48 rounded-lg overflow-hidden mb-6">
-            <img 
+          <div className="relative overflow-hidden rounded-[28px]">
+            <img
               src="https://images.unsplash.com/photo-1641736494066-bd18237ede26?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHVkZW50JTIwcGFzc3BvcnQlMjBkb2N1bWVudHMlMjB0cmF2ZWx8ZW58MXx8fHwxNzc2Njc2NzU4fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
               alt="Documents"
-              className="w-full h-full object-cover"
+              className="h-56 w-full object-cover sm:h-64"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-indigo-600/90 flex items-center justify-center text-white">
-              <div className="text-center">
-                <h1 className="text-4xl mb-2">Document Checklist</h1>
-                <p className="text-lg text-blue-100">Track your application documents and ensure everything is ready</p>
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-700/95 to-indigo-700/90" />
+            <div className="absolute inset-0 flex items-center px-5 sm:px-8">
+              <div className="max-w-2xl text-white">
+                <h1 className="text-3xl sm:text-4xl">Document Checklist</h1>
+                <p className="mt-3 text-sm text-blue-100 sm:text-base">
+                  Track application documents, rotate status in one tap, and export a quick summary when needed.
+                </p>
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* Progress Overview */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-lg shadow-lg p-6 mb-8"
+          className="mb-8 rounded-[24px] bg-gradient-to-br from-blue-600 to-indigo-600 p-5 text-white shadow-lg sm:p-6"
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-2xl mb-1">{completedRequired} / {requiredCount}</h2>
+              <h2 className="text-2xl">{completedRequired} / {requiredCount}</h2>
               <p className="text-blue-100">Required documents completed</p>
             </div>
-            <div className="text-right">
+            <div className="text-left sm:text-right">
               <div className="text-3xl">{progressPercentage}%</div>
               <p className="text-sm text-blue-100">Progress</p>
             </div>
           </div>
-          <div className="h-3 bg-blue-400 rounded-full overflow-hidden">
+          <div className="mt-4 h-3 overflow-hidden rounded-full bg-blue-400">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${progressPercentage}%` }}
-              transition={{ duration: 1, delay: 0.5 }}
+              transition={{ duration: 0.9, delay: 0.2 }}
               className="h-full bg-white"
             />
           </div>
+          <div className="mt-4 flex flex-col gap-2 text-sm text-blue-100 sm:flex-row sm:items-center sm:justify-between">
+            <span>{completedCount} total documents completed</span>
+            <button
+              onClick={downloadSummary}
+              className="inline-flex items-center gap-2 self-start rounded-xl bg-white/10 px-4 py-2 text-white transition-colors hover:bg-white/20"
+            >
+              <Download className="h-4 w-4" />
+              Download Summary
+            </button>
+          </div>
         </motion.div>
 
-        {/* Legend */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white rounded-lg shadow-sm p-4 mb-6"
+          className="mb-6 rounded-[24px] bg-white p-4 shadow-sm"
         >
-          <div className="flex flex-wrap gap-6 text-sm">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-green-600" />
-              <span className="text-gray-700">Completed</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Circle className="w-4 h-4 text-yellow-600" />
-              <span className="text-gray-700">In Progress</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Circle className="w-4 h-4 text-gray-400" />
-              <span className="text-gray-700">Not Started</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-red-600" />
-              <span className="text-gray-700">Required</span>
-            </div>
+          <div className="flex flex-wrap gap-5 text-sm">
+            <Legend icon={<CheckCircle2 className="h-4 w-4 text-green-600" />} label="Completed" />
+            <Legend icon={<Circle className="h-4 w-4 text-yellow-600" />} label="In Progress" />
+            <Legend icon={<Circle className="h-4 w-4 text-gray-400" />} label="Not Started" />
+            <Legend icon={<AlertCircle className="h-4 w-4 text-red-600" />} label="Required" />
           </div>
         </motion.div>
 
-        {/* Document List */}
         <div className="space-y-4">
           {documents.map((document, index) => (
-            <motion.div
+            <motion.article
               key={document.id}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.3 + index * 0.05 }}
-              className={`border rounded-lg p-5 transition-all hover:shadow-md ${getStatusColor(
-                document.status
+              transition={{ duration: 0.35, delay: 0.2 + index * 0.04 }}
+              className={`rounded-[24px] border p-4 shadow-sm transition-all hover:shadow-md sm:p-5 ${getStatusColor(
+                document.status,
               )}`}
             >
-              <div className="flex items-start gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                 <button
                   onClick={() => toggleDocumentStatus(document.id)}
-                  className="mt-1 hover:scale-110 transition-transform"
+                  className="flex items-center gap-3 self-start rounded-xl bg-white/80 px-3 py-2 text-left hover:bg-white"
                 >
                   {getStatusIcon(document.status)}
+                  <span className="text-sm text-gray-700">{getDocumentStatusLabel(document.status)}</span>
                 </button>
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-2">
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                      <h3 className="text-gray-900 flex items-center gap-2">
+                      <h3 className="flex items-center gap-2 text-gray-900">
                         {document.name}
-                        {document.required && (
-                          <span className="text-red-600 text-xs">
-                            <AlertCircle className="w-4 h-4" />
-                          </span>
-                        )}
+                        {document.required && <AlertCircle className="h-4 w-4 text-red-600" />}
                       </h3>
-                      <p className="text-sm text-gray-600 mt-1">{document.description}</p>
+                      <p className="mt-1 text-sm text-gray-600">{document.description}</p>
                     </div>
+                    {document.uploadDate && (
+                      <div className="text-sm text-gray-500">
+                        Uploaded on {new Date(document.uploadDate).toLocaleDateString()}
+                      </div>
+                    )}
                   </div>
 
-                  {document.uploadDate && (
-                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
-                      <Calendar className="w-3 h-3" />
-                      Uploaded on {new Date(document.uploadDate).toLocaleDateString()}
-                    </div>
-                  )}
-
-                  <div className="flex gap-2">
-                    {document.status === "completed" ? (
-                      <>
-                        <button className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-50 transition-colors">
-                          <Download className="w-4 h-4" />
-                          Download
-                        </button>
-                        <button className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors">
-                          <Upload className="w-4 h-4" />
-                          Replace
-                        </button>
-                      </>
-                    ) : (
-                      <button className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors">
-                        <Upload className="w-4 h-4" />
-                        Upload Document
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <button
+                      onClick={() => toggleDocumentStatus(document.id)}
+                      className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-700"
+                    >
+                      <Upload className="h-4 w-4" />
+                      {document.status === "completed" ? "Replace Document" : "Update Status"}
+                    </button>
+                    {document.status === "completed" && (
+                      <button
+                        onClick={downloadSummary}
+                        className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                      >
+                        <Download className="h-4 w-4" />
+                        Download Summary
                       </button>
+                    )}
+                    {document.name === "Resume/CV" && (
+                      <Link
+                        to="/resume-builder"
+                        className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm text-blue-700 transition-colors hover:bg-blue-100"
+                      >
+                        <FileText className="h-4 w-4" />
+                        Open Resume Builder
+                      </Link>
                     )}
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
 
-        {/* Tips Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8"
+          className="mt-8 rounded-[24px] border border-blue-200 bg-blue-50 p-5 sm:p-6"
         >
           <div className="flex gap-3">
-            <FileText className="w-6 h-6 text-blue-600 flex-shrink-0" />
+            <FileText className="h-6 w-6 flex-shrink-0 text-blue-600" />
             <div>
-              <h3 className="text-gray-900 mb-2">Document Preparation Tips</h3>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li>• Ensure all documents are in PDF format</li>
-                <li>• Keep file sizes under 5MB per document</li>
-                <li>• Translate non-English documents and get them notarized</li>
-                <li>• Make multiple copies and keep them in a secure location</li>
-                <li>• Check specific university requirements as they may vary</li>
+              <h3 className="text-gray-900">Document Preparation Tips</h3>
+              <ul className="mt-3 space-y-2 text-sm text-gray-700">
+                <li>Use PDF files whenever possible.</li>
+                <li>Keep file sizes under 5MB per document.</li>
+                <li>Translate non-English documents and notarize them when required.</li>
+                <li>Keep backup copies in cloud storage and offline.</li>
+                <li>Double-check university-specific requirements before submitting.</li>
               </ul>
             </div>
           </div>
         </motion.div>
       </div>
+    </div>
+  );
+}
+
+function getStatusIcon(status: DocumentItem["status"]) {
+  switch (status) {
+    case "completed":
+      return <CheckCircle2 className="h-5 w-5 text-green-600" />;
+    case "pending":
+      return <Circle className="h-5 w-5 text-yellow-600" />;
+    default:
+      return <Circle className="h-5 w-5 text-gray-400" />;
+  }
+}
+
+function getStatusColor(status: DocumentItem["status"]) {
+  switch (status) {
+    case "completed":
+      return "border-green-200 bg-green-50";
+    case "pending":
+      return "border-yellow-200 bg-yellow-50";
+    default:
+      return "border-gray-200 bg-white";
+  }
+}
+
+type LegendProps = {
+  icon: ReactNode;
+  label: string;
+};
+
+function Legend({ icon, label }: LegendProps) {
+  return (
+    <div className="flex items-center gap-2 text-gray-700">
+      {icon}
+      <span>{label}</span>
     </div>
   );
 }
