@@ -314,9 +314,9 @@ export default function Recommendations() {
                 <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
                   {[
                     { label: "Total Matches", value: data.total, icon: GraduationCap, color: "text-blue-500 bg-blue-50" },
-                    { label: "Avg Cost/Year", value: `$${data.summary.avgCost?.toLocaleString()}`, icon: DollarSign, color: "text-emerald-600 bg-emerald-50" },
-                    { label: "Safe Picks", value: data.safe.length, icon: CheckCircle, color: "text-emerald-600 bg-emerald-50" },
-                    { label: "Reach Schools", value: data.reach.length, icon: Target, color: "text-rose-500 bg-rose-50" },
+                    { label: "Avg Cost/Year", value: `$${data.summary?.avgCost?.toLocaleString()}`, icon: DollarSign, color: "text-emerald-600 bg-emerald-50" },
+                    { label: "Safe Picks", value: data.safe?.length ?? 0, icon: CheckCircle, color: "text-emerald-600 bg-emerald-50" },
+                    { label: "Reach Schools", value: data.reach?.length ?? 0, icon: Target, color: "text-rose-500 bg-rose-50" },
                   ].map(({ label, value, icon: Icon, color }) => (
                     <div key={label} className="rounded-2xl bg-white border border-slate-200/70 p-4 shadow-sm">
                       <div className={`inline-flex h-8 w-8 items-center justify-center rounded-xl mb-2 ${color}`}>
@@ -351,7 +351,7 @@ export default function Recommendations() {
                       { title: "Safe Picks", subtitle: "High confidence — strong match for your profile", unis: data.safe, color: "text-emerald-700", dot: "bg-emerald-500" },
                       { title: "Good Matches", subtitle: "Competitive but achievable with a strong application", unis: data.match, color: "text-amber-700", dot: "bg-amber-400" },
                       { title: "Reach Schools", subtitle: "Ambitious — apply if you want to aim high", unis: data.reach, color: "text-rose-700", dot: "bg-rose-500" },
-                    ].filter(s => s.unis.length > 0).map(({ title, subtitle, unis, color, dot }) => (
+                    ].filter(s => s.unis?.length > 0).map(({ title, subtitle, unis, color, dot }) => (
                       <div key={title}>
                         <div className="flex items-center gap-3 mb-4">
                           <div className={`h-3 w-3 rounded-full ${dot}`} />
@@ -369,7 +369,7 @@ export default function Recommendations() {
                   </div>
                 ) : (
                   <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                    {data.results.map((u, i) => <UniCard key={u.id} uni={u} index={i} />)}
+                    {data.results?.map((u, i) => <UniCard key={u.id} uni={u} index={i} />)}
                   </div>
                 )}
               </>
