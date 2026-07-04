@@ -1,35 +1,53 @@
-import { createBrowserRouter } from "react-router";
-import Root from "./pages/Root";
-import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile";
-import CountryComparison from "./pages/CountryComparison";
-import UniversityShortlist from "./pages/UniversityShortlist";
-import DocumentChecklist from "./pages/DocumentChecklist";
-import Roadmap from "./pages/Roadmap";
-import Recommendations from "./pages/Recommendations";
-import ResumeBuilder from "./pages/ResumeBuilder";
-import SopGenerator from "./pages/SopGenerator";
-import LORGenerator from "./pages/LORGenerator";
-import VisaMockInterview from "./pages/VisaMockInterview";
+import React from 'react';
+import { createBrowserRouter, Outlet } from 'react-router';
+import { LayoutWrapper } from './components/Layout/LayoutWrapper';
 
-export const router = createBrowserRouter([
+// Public page
+import Home from './pages/Home';
+
+// App pages (inside sidebar layout)
+import Dashboard from './pages/Dashboard';
+import Recommendations from './pages/Recommendations';
+import UniversityShortlist from './pages/UniversityShortlist';
+import CountryComparison from './pages/CountryComparison';
+import DocumentChecklist from './pages/DocumentChecklist';
+import SopGenerator from './pages/SopGenerator';
+import LORGenerator from './pages/LORGenerator';
+import ResumeBuilder from './pages/ResumeBuilder';
+import Roadmap from './pages/Roadmap';
+import VisaMockInterview from './pages/VisaMockInterview';
+import Profile from './pages/Profile';
+
+// Layout route: wraps all app pages with sidebar + top nav
+function AppLayout() {
+  return (
+    <LayoutWrapper>
+      <Outlet />
+    </LayoutWrapper>
+  );
+}
+
+const routes = createBrowserRouter([
   {
-    path: "/",
-    Component: Root,
+    path: '/',
+    element: <Home />,
+  },
+  {
+    element: <AppLayout />,
     children: [
-      { index: true, Component: Home },
-      { path: "dashboard", Component: Dashboard },
-      { path: "profile", Component: Profile },
-      { path: "compare-countries", Component: CountryComparison },
-      { path: "universities", Component: UniversityShortlist },
-      { path: "recommendations", Component: Recommendations },
-      { path: "documents", Component: DocumentChecklist },
-      { path: "sop-generator", Component: SopGenerator },
-      { path: "lor-generator", Component: LORGenerator },
-      { path: "resume-builder", Component: ResumeBuilder },
-      { path: "visa-mock-interview", Component: VisaMockInterview },
-      { path: "roadmap", Component: Roadmap },
+      { path: '/dashboard', element: <Dashboard /> },
+      { path: '/recommendations', element: <Recommendations /> },
+      { path: '/universities', element: <UniversityShortlist /> },
+      { path: '/compare-countries', element: <CountryComparison /> },
+      { path: '/documents', element: <DocumentChecklist /> },
+      { path: '/sop-generator', element: <SopGenerator /> },
+      { path: '/lor-generator', element: <LORGenerator /> },
+      { path: '/resume-builder', element: <ResumeBuilder /> },
+      { path: '/roadmap', element: <Roadmap /> },
+      { path: '/visa-mock-interview', element: <VisaMockInterview /> },
+      { path: '/profile', element: <Profile /> },
     ],
   },
 ]);
+
+export default routes;
